@@ -6,7 +6,8 @@ builder.Services.AddOpenApi()
     .AddCorsPolicy()
     .AddDatabaseExtensions(builder.Configuration)
     .AddIdentityServices()
-    .AddJwtConfiguration(builder.Configuration);
+    .AddJwtConfiguration(builder.Configuration)
+    .AddEndpoints(typeof(Program).Assembly);
 
 var app = builder.Build();
 

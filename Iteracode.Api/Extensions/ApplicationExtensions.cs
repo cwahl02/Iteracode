@@ -27,6 +27,7 @@ public static class ApplicationExtensions
         
         // TODO: Add CORS, Authentication and Authorization middlewares when needed
         app.UseCors("AllowAll");
+        app.MapEndpoints();
         // app.UseAuthentication();
         // app.UseAuthorization();
 
