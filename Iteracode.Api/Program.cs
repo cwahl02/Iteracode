@@ -1,8 +1,11 @@
 using FluentValidation;
 using Iteracode.Api.Extensions;
+using Iteracode.Api.Options;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("Jwt"));
 
 builder.Services
     .AddOpenApi()
@@ -11,7 +14,8 @@ builder.Services
     .AddIdentityServices()
     .AddJwtConfiguration(builder.Configuration)
     .AddEndpoints()
-    .AddValidatorsFromAssembly(typeof(Program).Assembly);
+    .AddValidatorsFromAssembly(typeof(Program).Assembly)
+    .AddInjectionMarkers();
 
 var app = builder.Build();
 
