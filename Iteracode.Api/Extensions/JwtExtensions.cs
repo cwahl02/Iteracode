@@ -8,6 +8,14 @@ namespace Iteracode.Api.Extensions;
 public static class JwtExtensions
 {
     public static IServiceCollection AddJwtConfiguration(
+        this IServiceCollection services
+    )
+    {
+        AddJwtConfiguration(services, services.BuildServiceProvider().GetRequiredService<IConfiguration>());
+        return services;    
+    }
+
+    public static IServiceCollection AddJwtConfiguration(
         this IServiceCollection services,
         IConfiguration configuration)
     {
