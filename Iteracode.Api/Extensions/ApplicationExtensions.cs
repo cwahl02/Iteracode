@@ -24,12 +24,10 @@ public static class ApplicationExtensions
         }
         
         app.UseHttpsRedirection();
-        
-        // TODO: Add CORS, Authentication and Authorization middlewares when needed
         app.UseCors("AllowAll");
+        app.UseAuthentication();
         app.MapEndpoints();
-        // app.UseAuthentication();
-        // app.UseAuthorization();
+        app.UseAuthorization();
 
         return app;
     }
