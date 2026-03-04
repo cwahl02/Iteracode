@@ -7,22 +7,19 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Iteracode.Api.Features.Auth;
 
-public static class Register
+public sealed class Register : IEndpoint
 {
     public sealed record Request(string Email, string Username, string Password, string ConfirmPassword);
 
-    public sealed class Endpoint : IEndpoint
+    public void MapEndpoint(IEndpointRouteBuilder app)
     {
-        public void MapEndpoint(IEndpointRouteBuilder app)
-        {
-            app.MapPost("/api/auth/register", Handle)
-                .WithTags("Auth")
-                .WithName("Register")
-                .WithSummary("Registers a new user.")
-                .WithDescription("Creates a new user account with the provided email, username, and password.")
-                .Produces(StatusCodes.Status200OK)
-                .Produces(StatusCodes.Status400BadRequest);
-        }
+        app.MapPost("/api/auth/register", Handle)
+            .WithTags("Auth")
+            .WithName("Register")
+            .WithSummary("Registers a new user.")
+            .WithDescription("Creates a new user account with the provided email, username, and password.")
+            .Produces(StatusCodes.Status200OK)
+            .Produces(StatusCodes.Status400BadRequest);
     }
 
     public static async Task<IResult> Handle(
