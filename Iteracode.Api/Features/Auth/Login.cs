@@ -67,7 +67,7 @@ public sealed class Login : IEndpoint
             CreatedAt = DateTimeOffset.UtcNow
         });
 
-        await dbContext.SaveChangesAsync();
+        await dbContext.SaveChangesAsync(); 
 
         // Return access token in response body
         return Results.Ok(new { AccessToken = accessToken });
