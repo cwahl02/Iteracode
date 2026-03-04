@@ -1,13 +1,17 @@
+using FluentValidation;
 using Iteracode.Api.Extensions;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi()
+builder.Services
+    .AddOpenApi()
     .AddCorsPolicy()
     .AddDatabaseExtensions(builder.Configuration)
     .AddIdentityServices()
     .AddJwtConfiguration(builder.Configuration)
-    .AddEndpoints(typeof(Program).Assembly);
+    .AddEndpoints()
+    .AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 var app = builder.Build();
 
