@@ -11,4 +11,5 @@ public class ApplicationDbContext : IdentityDbContext<User>
         : base(options) { }
 
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<BlacklistedToken> BlacklistedTokens => Set<BlacklistedToken>();
 }
