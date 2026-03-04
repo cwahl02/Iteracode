@@ -5,7 +5,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi()
     .AddCorsPolicy()
     .AddDatabaseExtensions(builder.Configuration)
-    .AddIdentityServices();
+    .AddIdentityServices()
+    .AddJwtConfiguration(builder.Configuration);
 
 var app = builder.Build();
 
