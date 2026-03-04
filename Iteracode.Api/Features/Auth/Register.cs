@@ -1,4 +1,3 @@
-using System.Runtime.CompilerServices;
 using FluentValidation;
 using Iteracode.Api.Abstractions;
 using Iteracode.Api.Models;
