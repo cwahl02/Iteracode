@@ -9,7 +9,7 @@ namespace Iteracode.Api.Features.Auth;
 
 public sealed class Register : IEndpoint
 {
-    public sealed record Request(string Email, string Username, string Password, string ConfirmPassword);
+    public sealed record RegisterRequest(string Email, string Username, string Password, string ConfirmPassword);
 
     public void MapEndpoint(IEndpointRouteBuilder app)
     {
@@ -24,7 +24,7 @@ public sealed class Register : IEndpoint
 
     public static async Task<IResult> Handle(
         [FromServices] UserManager<User> userManager,
-        [FromBody] Request request,
+        [FromBody] RegisterRequest request,
         CancellationToken cancellationToken)
     {
         var newUser = new User
