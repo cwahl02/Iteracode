@@ -1,3 +1,4 @@
+using Iteracode.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -7,9 +8,18 @@ namespace Iteracode.Api.Extensions;
 public static class JwtExtensions
 {
     public static IServiceCollection AddJwtConfiguration(
+        this IServiceCollection services
+    )
+    {
+        AddJwtConfiguration(services, services.BuildServiceProvider().GetRequiredService<IConfiguration>());
+        return services;    
+    }
+
+    public static IServiceCollection AddJwtConfiguration(
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.AddAuthentication(options =>
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;

@@ -26,8 +26,8 @@ public static class ApplicationExtensions
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.UseAuthentication();
+        //app.UseAuthorization();
         app.MapEndpoints();
-        app.UseAuthorization();
 
         return app;
     }
