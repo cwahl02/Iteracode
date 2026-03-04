@@ -6,6 +6,14 @@ namespace Iteracode.Api.Extensions;
 public static class DatabaseExtensions
 {
     public static IServiceCollection AddDatabaseExtensions(
+        this IServiceCollection services
+    )
+    {
+        AddDatabaseExtensions(services, services.BuildServiceProvider().GetRequiredService<IConfiguration>());
+        return services;    
+    }
+
+    public static IServiceCollection AddDatabaseExtensions(
         this IServiceCollection services,
         IConfiguration configuration)
     {
