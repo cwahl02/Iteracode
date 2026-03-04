@@ -1,3 +1,6 @@
+using Iteracode.Api.Data;
+using Microsoft.EntityFrameworkCore;
+
 namespace Iteracode.Api.Extensions;
 
 public static class DatabaseExtensions
@@ -6,9 +9,8 @@ public static class DatabaseExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Uncomment and configure when ApplicationDbContext and connection string are ready
-        // services.AddDbContext<>(options =>
-        //     options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
         return services;
     }
 }
