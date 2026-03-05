@@ -26,7 +26,7 @@ public static class ApplicationExtensions
         app.UseHttpsRedirection();
         app.UseCors("AllowAll");
         app.UseAuthentication();
-        //app.UseAuthorization();
+        app.UseAuthorization();
         app.MapEndpoints();
 
         return app;
