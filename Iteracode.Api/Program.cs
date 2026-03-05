@@ -15,7 +15,8 @@ builder.Services
     .AddJwtConfiguration()
     .AddEndpoints()
     .AddValidatorsFromAssembly(typeof(Program).Assembly)
-    .AddInjectionMarkers();
+    .AddInjectionMarkers()
+    .AddAuthorization();
 
 var app = builder.Build();
 
