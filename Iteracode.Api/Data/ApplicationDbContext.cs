@@ -10,14 +10,16 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options) { }
 
-    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<BlacklistedToken> BlacklistedTokens => Set<BlacklistedToken>();
+    public DbSet<LanguageJudge0Id> LanguageJudge0Ids => Set<LanguageJudge0Id>();
     public DbSet<Problem> Problems => Set<Problem>();
     public DbSet<ProblemLanguage> ProblemLanguages => Set<ProblemLanguage>();
-    public DbSet<Testcase> TestCases => Set<Testcase>();
+    public DbSet<ProblemTag> ProblemTags => Set<ProblemTag>();
     public DbSet<ProblemTestcase> ProblemTestCases => Set<ProblemTestcase>();
-    public DbSet<LanguageJudge0Id> LanguageJudge0Ids => Set<LanguageJudge0Id>();
     public DbSet<RunnerTemplate> RunnerTemplates => Set<RunnerTemplate>();
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
+    public DbSet<Tag> Tags => Set<Tag>();
+    public DbSet<Testcase> TestCases => Set<Testcase>();
 
     // protected override void OnModelCreating(ModelBuilder builder)
     // {
