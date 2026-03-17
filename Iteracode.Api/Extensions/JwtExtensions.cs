@@ -1,6 +1,7 @@
 using Iteracode.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 
 namespace Iteracode.Api.Extensions;
@@ -43,11 +44,20 @@ public static class JwtExtensions
             {
                 OnMessageReceived = ctx =>
                 {
+                    Console.WriteLine("OnMessageReceived called");
                     // Allow access token from cookie as fallback if needed
                     ctx.Token = ctx.Request.Headers.Authorization
                         .FirstOrDefault()?.Split(" ").Last();
                     return Task.CompletedTask;
-                }
+                },
+                OnTokenValidated = ctx =>
+                {
+                    var jti = ctx.Principal?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
+
+                    
+
+                    return Task.CompletedTask;
+                },
             };
         });
         

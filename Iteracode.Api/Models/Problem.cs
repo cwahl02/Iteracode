@@ -2,11 +2,13 @@ namespace Iteracode.Api.Models;
 
 public class Problem
 {
-	public int Id { get; set; }
-	public string Title { get; set; } = null!;
-    public string Description { get; set; } = null!;
-	public DateTimeOffset CreatedAt { get; set; }
-	public ICollection<ProblemLanguage> ProblemLanguages { get; set; } = null!;
-	public ICollection<ProblemTag> ProblemTags { get; set; } = null!;
-	public ICollection<ProblemTestcase> ProblemTestcases { get; set; } = null!;
+    public int Id { get; set; }
+    public string Slug { get; set; } = null!;
+    public bool Published { get; set; }
+    public DateTimeOffset CreatedAt { get; set; }
+    public DateTimeOffset UpdatedAt { get; set; }
+    public DateTimeOffset? DeletedAt { get; set; }
+
+    // Nav
+    public ICollection<Submission> Submissions { get; set; } = [];
 }

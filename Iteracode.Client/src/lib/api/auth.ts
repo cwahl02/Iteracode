@@ -1,64 +1,48 @@
-import { apiFetch } from '../api';
-import { getAccessToken, setAccessToken, clearAccessToken } from '$lib/stores/auth';
-import type { ApiError } from '$lib/types/auth';
+import { auth } from "$lib/stores/auth.svelte";
+import { apiFetch } from "./client";
 
-export interface LoginResponse {
-    accessToken: string;
-}
+export type LoginRequest = {
+  emailOrUsername: string;
+  password: string;
+};
 
-export interface RegisterResponse {
-    email: string;
-    username: string;
-    password: string;
-    confirmPassword: string;
-}
+export type LoginResponse = {
+  accessToken: string;
+};
 
-export interface RefreshResponse {
-    accessToken: string;
-}
-
-export async function login(emailOrUsername: string, password: string) {
-    try {
-        const data = await apiFetch<LoginResponse>('/auth/login', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ emailOrUsername: emailOrUsername, password: password }),
-            skipAuth: true
-        });
-
-        setAccessToken(data.accessToken);
-    } catch (err) {
-        const apiError = err as ApiError;
-    }
-}
-
-export async function logout() {
-    try {
-        await apiFetch('/auth/logout',{
-            method: 'POST'
-        });
-    } finally {
-        clearAccessToken();
-    }
-}
-
-export async function register(email: string, username: string, password: string, confirmPassword: string) {
-    try {
-        await apiFetch<RegisterResponse>('/auth/register', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, username, password, confirmPassword }),
-            skipAuth: true
-        });
-    } catch (err) {
-        const apiError = err as ApiError;
-    }
-}
-
-export async function refreshSession() {
-    const data = await apiFetch<RefreshResponse>('/auth/refresh', {
-        method: 'POST'
+export const authApi = {
+  async login(body: LoginRequest): Promise<void> {
+    const res = await fetch("/api/auth/login", {
+      method:      "POST",
+      credentials: "include", // receive refresh token cookie
+      headers:     { "Content-Type": "application/json" },
+      body:        JSON.stringify(body),
     });
-    
-    setAccessToken(data.accessToken);
-}
+    if (!res.ok) {
+      const { message } = await res.json().catch(() => ({ message: "Login failed" }));
+      throw new Error(message);
+    }
+    const { accessToken }: LoginResponse = await res.json();
+    auth.accessToken = accessToken;
+  },
+
+  async logout(): Promise<void> {
+    await apiFetch("/api/auth/logout", { method: "POST" }).catch(() => {});
+    auth.clear();
+  },
+
+  // Call on app mount to silently reacquire access token from refresh cookie
+  async hydrate(): Promise<void> {
+    try {
+      const res = await fetch("/api/auth/refresh", {
+        method:      "POST",
+        credentials: "include",
+      });
+      if (!res.ok) return;
+      const { accessToken }: LoginResponse = await res.json();
+      auth.accessToken = accessToken;
+    } catch {
+      // no valid session, stay logged out
+    }
+  },
+};

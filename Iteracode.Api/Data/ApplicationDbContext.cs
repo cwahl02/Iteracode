@@ -19,57 +19,33 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<RunnerTemplate> RunnerTemplates => Set<RunnerTemplate>();
     public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
     public DbSet<Tag> Tags => Set<Tag>();
-    public DbSet<Testcase> TestCases => Set<Testcase>();
+    public DbSet<Submission> Submissions => Set<Submission>();
 
-    // protected override void OnModelCreating(ModelBuilder builder)
-    // {
-    //     base.OnModelCreating(builder);
-        
-    //     // ProblemTestCase has a composite key of ProblemId and TestCaseId
-    //     builder.Entity<ProblemTestCase>()
-    //         .HasKey(ptc => new { ptc.ProblemId, ptc.TestCaseId });
+    // Add to OnModelCreating:
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
 
-    //     // Configure the relationship between ProblemTestCase and Problem
-    //     builder.Entity<ProblemTestCase>()
-    //         .HasOne(ptc => ptc.Problem)
-    //         .WithMany(p => p.ProblemTestCases)
-    //         .HasForeignKey(ptc => ptc.ProblemId)
-    //         .OnDelete(DeleteBehavior.Cascade); // Delete ProblemTestCase when Problem is deleted
+        builder.Entity<Problem>(e =>
+        {
+            e.HasKey(p => p.Id);
+            e.HasIndex(p => p.Slug).IsUnique();
+            e.Property(p => p.Slug).IsRequired().HasMaxLength(200);
+        });
 
-    //     // Configure the relationship between ProblemTestCase and TestCase
-    //     builder.Entity<ProblemTestCase>()
-    //         .HasOne(ptc => ptc.TestCase)
-    //         .WithMany(tc => tc.ProblemTestCases)
-    //         .HasForeignKey(ptc => ptc.TestCaseId)
-    //         .OnDelete(DeleteBehavior.Restrict); // Don't delete TestCase when ProblemTestCase is deleted
-
-    //     // Configure the relationship between ProblemImpl and Problem
-    //     builder.Entity<ProblemImpl>()
-    //         .HasOne(pi => pi.Problem)
-    //         .WithMany(p => p.Implementations)
-    //         .HasForeignKey(pi => pi.ProblemId)
-    //         .OnDelete(DeleteBehavior.Cascade); // Delete ProblemImpl when Problem is deleted
-
-    //     // Ensure that each Problem can only have one implementation per language
-    //     builder.Entity<ProblemImpl>()
-    //         .HasIndex(pi => new { pi.ProblemId, pi.LanguageId})
-    //         .IsUnique();
-
-    //     builder.Entity<Submission>()
-    //         .HasOne(s => s.User)
-    //         .WithMany()
-    //         .HasForeignKey(s => s.UserId)
-    //         .OnDelete(DeleteBehavior.Cascade); // Delete Submission when User is deleted
-
-    //     builder.Entity<Submission>()
-    //         .HasOne(s => s.Problem)
-    //         .WithMany(p => p.Submissions)
-    //         .HasForeignKey(s => s.ProblemId)
-    //         .OnDelete(DeleteBehavior.SetNull) // Set ProblemId to null when Problem is deleted
-    //         .IsRequired(false);
-
-    //     builder.Entity<Submission>()
-    //         .Property(s => s.Result)
-    //         .HasConversion<string>(); // Store enum as string in the database
-    // }
+        builder.Entity<Submission>(e =>
+        {
+            e.HasKey(s => s.Id);
+            e.HasOne(s => s.User)
+            .WithMany()
+            .HasForeignKey(s => s.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+            e.HasOne(s => s.Problem)
+            .WithMany(p => p.Submissions)
+            .HasForeignKey(s => s.ProblemSlug)
+            .HasPrincipalKey(p => p.Slug)
+            .OnDelete(DeleteBehavior.Cascade);
+            e.Property(s => s.Language).IsRequired().HasMaxLength(50);
+        });
+    }
 }
